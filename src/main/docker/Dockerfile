@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11-jre
+FROM eclipse-temurin:11-jre-alpine
 
 LABEL maintainer="michael.theis@msg.group"
 LABEL ${project.groupId}.${project.artifactId}.project="CloudTrain"
@@ -19,16 +19,16 @@ ENV JAVA_APPLICATION=${ARG_JAVA_APPLICATION} \
     JAVA_APPLICATION=${ARG_JAVA_APPLICATION} \
     JAVA_APPLICATION_HOME=${ARG_JAVA_APPLICATION_HOME}
 
-RUN echo "adding run user spring to system" && \
-    addgroup --gid 1000 --system spring && \
-    adduser --system --disabled-login --disabled-password --ingroup spring --uid 1000 spring
+RUN echo "adding non-root user spring to system" && \
+    addgroup -S spring -g 1000 && \
+    adduser -S spring -u 1000 -G spring
 
 COPY docker-entrypoint.sh /
 COPY *.jar ${ARG_JAVA_APPLICATION_HOME}/
 
-RUN chown spring:spring /docker-entrypoint.sh \
-    && chmod u+x /docker-entrypoint.sh \
-    && chown -R spring:spring ${ARG_JAVA_APPLICATION_HOME}
+RUN chown spring:spring /docker-entrypoint.sh && \
+    chmod u+x /docker-entrypoint.sh && \
+    chown -R spring:spring ${ARG_JAVA_APPLICATION_HOME}
 
 # use user ID instead of user name to allow kubernetes to check non-root users
 USER 1000
