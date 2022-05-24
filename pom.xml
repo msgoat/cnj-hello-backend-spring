@@ -17,14 +17,14 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- runtime related properties -->
         <java.version>11</java.version>
-        <spring.boot.version>2.6.2</spring.boot.version>
+        <spring.boot.version>2.7.0</spring.boot.version>
         <!-- common logging dependencies -->
         <slf4j.version>1.7.32</slf4j.version>
         <logstash.logback.encoder.version>6.1</logstash.logback.encoder.version>
         <!-- common test dependencies -->
         <junit.version>5.8.1</junit.version>
         <restassured.version>4.4.0</restassured.version>
-        <cnj.common.test.version>3.0.0</cnj.common.test.version>
+        <cnj.common.test.version>3.0.1</cnj.common.test.version>
          <!-- docker related properties -->
         <docker.registry.name>docker.cloudtrain.aws.msgoat.eu</docker.registry.name>
         <docker.organization.name>cloudtrain</docker.organization.name>
