@@ -28,6 +28,6 @@ steps:
       - git push origin ${GIT_TAG_NAME}
     when:
       branch:
-        - master
+        - main
       status:
         - success
