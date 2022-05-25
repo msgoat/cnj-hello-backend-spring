@@ -18,14 +18,16 @@ steps:
     commands:
       - mvn clean verify -f pom.xml -B -ff -e -V -U -P integration-test-stage -Dchangelist=.${DRONE_BRANCH} -Dsha1=.${DRONE_COMMIT_SHA:0:8}
   - name: git-tag-stage
-    image: docker.cloudtrain.aws.msgoat.eu/cloudtrain/cnj-drone-build:2.0.1
+    image: alpine/git
     commands:
       - export MAVEN_REVISION=$(grep -m 1 '<revision>' pom.xml | cut -d '<' -f2  | cut -d '>' -f2)
-      - export GIT_TAG_NAME=${MAVEN_REVISION}.${DRONE_BRANCH}.${DRONE_COMMIT_SHA:0:8}
-      - echo "tagging current commit with tag [${GIT_TAG_NAME}]"
-      - git tag ${GIT_TAG_NAME}
+      - echo "picked up maven revision [$MAVEN_REVISION] from POM file"
+      - export GIT_TAG_NAME=$MAVEN_REVISION.${DRONE_BRANCH}.${DRONE_COMMIT_SHA:0:8}
+      - echo "build git tag name [$GIT_TAG_NAME] from environment"
+      - echo "tagging current commit with tag [$GIT_TAG_NAME]"
+      - git tag $GIT_TAG_NAME
       - echo "pushing tag to central repo"
-      - git push origin ${GIT_TAG_NAME}
+      - git push origin $GIT_TAG_NAME
     when:
       branch:
         - main
