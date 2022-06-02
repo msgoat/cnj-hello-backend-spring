@@ -5,7 +5,7 @@ name: cnj-hello-build
 
 steps:
   - name: commit-stage
-    image: docker.cloudtrain.aws.msgoat.eu/cloudtrain/cnj-drone-build:2.0.1
+    image: docker.cloudtrain.aws.msgoat.eu/cloudtrain/cnj-drone-build:3.0.0
     privileged: true
     commands:
       - start-docker.sh
@@ -14,7 +14,7 @@ steps:
       SONARQUBE_TOKEN:
         from_secret: sonarqube_token
   - name: integration-test-stage
-    image: docker.cloudtrain.aws.msgoat.eu/cloudtrain/cnj-drone-build:2.0.1
+    image: docker.cloudtrain.aws.msgoat.eu/cloudtrain/cnj-drone-build:3.0.0
     commands:
       - mvn clean verify -f pom.xml -B -ff -e -V -U -P integration-test-stage -Dchangelist=.${DRONE_BRANCH} -Dsha1=.${DRONE_COMMIT_SHA:0:8}
 #  - name: git-tag-stage
