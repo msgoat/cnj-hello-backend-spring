@@ -1,9 +1,14 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      java: corretto11
   pre_build:
     commands:
       - echo "Running phase pre_build"
+      - echo "Download common configuration files"
+      - aws s3 cp s3://s3-eu-west-1-cloudtrain-codebuild-shared/.mvn/settings.xml ./.mvn/settings.xml
   build:
     commands:
       - echo "Running phase build"
@@ -11,7 +16,7 @@ phases:
       - echo "CODEBUILD_SOURCE_VERSION=$CODEBUILD_SOURCE_VERSION"
       - echo "CODEBUILD_RESOLVED_SOURCE_VERSION=$CODEBUILD_RESOLVED_SOURCE_VERSION"
       - echo Building the java application...
-      - mvn clean install -f pom.xml -B -ff -e -V -U -P commit-stage -Dchangelist=.main -Dsha1=.12345678 -Dsonar.login=$SONARQUBE_TOKEN
+      - mvn clean install -f pom.xml -B -ff -e -V -U -P commit-stage -gs ./.mvn/settings.xml -Dchangelist=.main -Dsha1=.12345678 -Dsonar.login=$SONARQUBE_TOKEN
   post_build:
     commands:
       - echo "Running phase post_build"
