@@ -4,7 +4,7 @@ Simplest possible cloud native java application based on Spring Boot.
 
 ## Status
 
-![Build status](https://drone.cloudtrain.aws.msgoat.eu/api/badges/msgoat/cnj-hello-backend-spring/status.svg)
+![Build status](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiMUdQanVuMHNQLzZqTVBlV3p3dXkvOEJvMUJQM3ZzOGlGRVZ0Mk8vWUdaN1grS1NsL0V1SHUyYVIxZ2J6OE1maGVKcWlCdUV1aWZyZHlSWm41Z2txank0PSIsIml2UGFyYW1ldGVyU3BlYyI6ImdYKzA0bm5tNk1oalBheUsiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main)
 
 ## Release Information
 
