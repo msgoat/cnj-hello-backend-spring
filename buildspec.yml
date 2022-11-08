@@ -5,6 +5,14 @@ env:
     SONARQUBE_TOKEN: "cloudtrain-codebuild-sonarqube:token"
 
 phases:
+  install:
+    on-failure: ABORT
+    commands:
+      - echo "Install helm"
+      - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      - chmod 700 get_helm.sh
+      - ./get_helm.sh
+      - helm version
   pre_build:
     on-failure: ABORT
     commands:
