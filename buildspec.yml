@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    SONARQUBE_TOKEN: "cloudtrain-codebuild-sonarqube:token"
+
 phases:
   pre_build:
     commands:
