@@ -25,6 +25,7 @@ phases:
       - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PAT
       - echo "Authenticate on EKS"
       - aws eks update-kubeconfig --name eks-eu-west-1-cloudtrain-dev-cloudtrain
+      - cat /root/.kube/config
       - aws eks get-token --cluster-name eks-eu-west-1-cloudtrain-dev-cloudtrain
   build:
     on-failure: ABORT
