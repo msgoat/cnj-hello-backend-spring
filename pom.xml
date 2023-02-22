@@ -136,7 +136,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>group.msg.at.cloud.common</groupId>
+        <groupId>group.msg.at.cloud.common</groupId>
             <artifactId>cnj-common-test-jakarta</artifactId>
             <version>${cnj.common.test.jakarta.version}</version>
             <scope>test</scope>
