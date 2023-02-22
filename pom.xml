@@ -11,7 +11,7 @@
         <!-- new Maven version management -->
         <revision>7.2.0</revision>
         <sha1>.12345678</sha1>
-        <changelist>LOCAL</changelist>
+        <changelist>.LOCAL</changelist>
         <!-- general properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -25,7 +25,8 @@
         <!-- common test dependencies -->
         <junit.version>5.9.2</junit.version>
         <restassured.version>5.2.1</restassured.version>
-        <cnj.common.test.version>3.0.1</cnj.common.test.version>
+        <cnj.common.test.core.version>0.9.0</cnj.common.test.core.version>
+        <cnj.common.test.jakarta.version>0.1.0</cnj.common.test.jakarta.version>
          <!-- docker related properties -->
         <docker.registry.name>docker.cloudtrain.aws.msgoat.eu</docker.registry.name>
         <docker.organization.name>cloudtrain</docker.organization.name>
@@ -130,8 +131,14 @@
         </dependency>
         <dependency>
             <groupId>group.msg.at.cloud.common</groupId>
-            <artifactId>cnj-common-test</artifactId>
-            <version>${cnj.common.test.version}</version>
+            <artifactId>cnj-common-test-core</artifactId>
+            <version>${cnj.common.test.core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>group.msg.at.cloud.common</groupId>
+            <artifactId>cnj-common-test-jakarta</artifactId>
+            <version>${cnj.common.test.jakarta.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
