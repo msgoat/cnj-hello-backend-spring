@@ -25,8 +25,8 @@
         <!-- common test dependencies -->
         <junit.version>5.9.2</junit.version>
         <restassured.version>5.2.1</restassured.version>
-        <cnj.common.test.core.version>0.9.0</cnj.common.test.core.version>
-        <cnj.common.test.jakarta.version>0.1.0</cnj.common.test.jakarta.version>
+        <cnj.common.test.core.version>1.0.0</cnj.common.test.core.version>
+        <cnj.common.test.jakarta.version>1.0.0</cnj.common.test.jakarta.version>
          <!-- docker related properties -->
         <docker.registry.name>docker.cloudtrain.aws.msgoat.eu</docker.registry.name>
         <docker.organization.name>cloudtrain</docker.organization.name>
@@ -129,6 +129,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- common system test extensions -->
         <dependency>
             <groupId>group.msg.at.cloud.common</groupId>
             <artifactId>cnj-common-test-core</artifactId>
