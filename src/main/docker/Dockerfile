@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-alpine
+FROM docker.cloudtrain.aws.msgoat.eu/cloudtrain/cnj-docker-jre17-alpine:latest
 
 LABEL maintainer="michael.theis@msg.group"
 LABEL ${project.groupId}.${project.artifactId}.project="CloudTrain"
@@ -16,7 +16,7 @@ ENV JAVA_APPLICATION=${ARG_JAVA_APPLICATION} \
     DOCKER_JAVA_OPTS="-XX:+UseContainerSupport -XX:InitialRAMPercentage=75.0 -XX:MaxRAMPercentage=75.0" \
     SPRING_JAVA_OPTS="" \
     SPRING_ARGUMENTS="" \
-    SPRING_PROFILES_ACTIVE="default" \
+    SPRING_PROFILES_ACTIVE="cloud" \
     JAVA_APPLICATION=${ARG_JAVA_APPLICATION} \
     JAVA_APPLICATION_HOME=${ARG_JAVA_APPLICATION_HOME}
 
