@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## [7.3.0] - 2023-06-02
+### Changed
+- upgraded to Spring Boot 3.1.0
+- switched back from undertow to tomcat
+
 ## [7.2.0] - 2023-02-22
 ### Changed
 - upgraded to Spring Boot 3.0.2
