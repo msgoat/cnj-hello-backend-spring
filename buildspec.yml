@@ -29,6 +29,8 @@ env:
 phases:
   install:
     on-failure: ABORT
+    runtime-versions:
+      java: corretto21
     commands:
       - echo "Running phase install"
       - echo "Download and run common installation script"
