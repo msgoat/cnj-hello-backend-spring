@@ -37,6 +37,7 @@ phases:
       - ~/cloudtrain-codebuild-install.sh
       - echo "Install JDK 21"
       - yum install -y java-21-amazon-corretto-headless
+      - export JAVA_HOME=/usr/lib/jvm/java-21-amazon-corretto.x86_64
   pre_build:
     on-failure: ABORT
     commands:
