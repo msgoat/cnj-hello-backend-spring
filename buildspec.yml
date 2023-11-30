@@ -29,14 +29,14 @@ env:
 phases:
   install:
     on-failure: ABORT
-    runtime-versions:
-      java: corretto21
     commands:
       - echo "Running phase install"
       - echo "Download and run common installation script"
       - aws s3 cp s3://s3-eu-west-1-cloudtrain-codebuild-shared/cloudtrain-codebuild-install.sh ~/
       - chmod u+x ~/cloudtrain-codebuild-install.sh
       - ~/cloudtrain-codebuild-install.sh
+      - echo "Install JDK 21"
+      - yum install java-21-amazon-corretto-headless
   pre_build:
     on-failure: ABORT
     commands:
