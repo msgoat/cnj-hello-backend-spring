@@ -64,7 +64,7 @@
         <maven.surefire.plugin.version>3.2.1</maven.surefire.plugin.version>
         <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
         <!-- pinning versions of custom maven plugins -->
-        <maven.compose.plugin.version>5.0.0</maven.compose.plugin.version>
+        <maven.compose.plugin.version>5.1.0</maven.compose.plugin.version>
         <maven.helm.plugin.version>5.0.0</maven.helm.plugin.version>
         <!-- quality assurance properties -->
         <sonar.host.url>https://sonarqube.cloudtrain.aws.msgoat.eu</sonar.host.url>
@@ -403,7 +403,7 @@
                     </execution>
                     <execution>
                         <id>push-docker-image</id>
-                        <phase>install</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
@@ -433,11 +433,6 @@
                         <goals>
                             <goal>upWithLogs</goal>
                         </goals>
-                        <configuration>
-                            <composeFile>
-                                ${project.build.directory}/compose-resources/${project.artifactId}/docker-compose.yml
-                            </composeFile>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>stop-docker-containers</id>
@@ -445,13 +440,13 @@
                         <goals>
                             <goal>down</goal>
                         </goals>
-                        <configuration>
-                            <composeFile>
-                                ${project.build.directory}/compose-resources/${project.artifactId}/docker-compose.yml
-                            </composeFile>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <composeFile>
+                        ${project.build.directory}/compose-resources/${project.artifactId}/docker-compose.yml
+                    </composeFile>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -463,15 +458,6 @@
                             <goal>integration-test</goal>
                         </goals>
                         <phase>integration-test</phase>
-                        <configuration>
-                            <failIfNoTests>true</failIfNoTests>
-                            <includes>
-                                <include>**/*SystemTest.java</include>
-                            </includes>
-                            <systemPropertyVariables>
-                                <test.target.route>${docker.test.target.route}</test.target.route>
-                            </systemPropertyVariables>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>verify-system-test-results</id>
@@ -479,11 +465,17 @@
                             <goal>verify</goal>
                         </goals>
                         <phase>verify</phase>
-                        <configuration>
-                            <failIfNoTests>true</failIfNoTests>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <failIfNoTests>true</failIfNoTests>
+                    <includes>
+                        <include>**/*SystemTest.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <test.target.route>${docker.test.target.route}</test.target.route>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
             <!-- quality assurance plugins -->
             <plugin>
@@ -576,6 +568,16 @@
                     <chartRegistry>${docker.registry.name}</chartRegistry>
                     <chartRepository>${docker.organization.name}-charts</chartRepository>
                     <chartVersion>${revision}</chartVersion>
+                    <chartName>${project.artifactId}</chartName>
+                    <chartVersion>${revision}</chartVersion>
+                    <releaseName>${project.artifactId}</releaseName>
+                    <namespace>${k8s.cluster.namespace}</namespace>
+                    <debug>true</debug>
+                    <timeout>120s</timeout>
+                    <values>
+                        <ingress.host>${k8s.ingress.host}</ingress.host>
+                        <ingress.path>${k8s.ingress.path}</ingress.path>
+                    </values>
                 </configuration>
             </plugin>
             <plugin>
@@ -664,6 +666,11 @@
         <profile>
             <id>integration-test-stage</id>
             <properties>
+                <sonar.skip>true</sonar.skip>
+                <compose.skip>true</compose.skip>
+                <docker.skip>true</docker.skip>
+                <dependency-check.skip>true</dependency-check.skip>
+                <jacoco.skip>true</jacoco.skip>
                 <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
             </properties>
             <build>
@@ -676,14 +683,7 @@
                             <skip>true</skip>
                         </configuration>
                     </plugin>
-                    <!-- skip JAR packaging, since we are working with an already built artifact -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <skipIfEmpty>true</skipIfEmpty>
-                        </configuration>
-                    </plugin>
+                    <!-- pull helm chart and deploy it -->
                     <plugin>
                         <groupId>group.msg.at.cloud.tools</groupId>
                         <artifactId>helm-maven-plugin</artifactId>
@@ -694,31 +694,13 @@
                                 <goals>
                                     <goal>pull</goal>
                                 </goals>
-                                <configuration>
-                                    <chartRegistry>${docker.registry.name}</chartRegistry>
-                                    <chartRepository>${docker.organization.name}-charts</chartRepository>
-                                    <chartName>${project.artifactId}</chartName>
-                                    <chartVersion>${revision}</chartVersion>
-                                    <chartPackageDirectory>${project.build.directory}/helm-resources</chartPackageDirectory>
-                                </configuration>
                             </execution>
                             <execution>
-                                <id>helm-install</id>
+                                <id>helm-deploy</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>deploy</goal>
                                 </goals>
-                                <configuration>
-                                    <chartPackageDirectory>${project.build.directory}/helm-resources</chartPackageDirectory>
-                                    <releaseName>${project.artifactId}</releaseName>
-                                    <namespace>${k8s.cluster.namespace}</namespace>
-                                    <debug>true</debug>
-                                    <timeout>120s</timeout>
-                                    <values>
-                                        <ingress.host>${k8s.ingress.host}</ingress.host>
-                                        <ingress.path>${k8s.ingress.path}</ingress.path>
-                                    </values>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -726,34 +708,12 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>run-system-tests</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                                <phase>integration-test</phase>
-                                <configuration>
-                                    <includes>
-                                        <include>**/*SystemTest.java</include>
-                                    </includes>
-                                    <systemPropertyVariables>
-                                        <test.target.route>${k8s.test.target.route}</test.target.route>
-                                        <test.target.readinessProbe.initialDelaySeconds>0</test.target.readinessProbe.initialDelaySeconds>
-                                    </systemPropertyVariables>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>verify-system-test-results</id>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                                <phase>verify</phase>
-                                <configuration>
-                                    <failIfNoTests>true</failIfNoTests>
-                                </configuration>
-                            </execution>
-                        </executions>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <test.target.route>${k8s.test.target.route}</test.target.route>
+                                <test.target.readinessProbe.initialDelaySeconds>0</test.target.readinessProbe.initialDelaySeconds>
+                            </systemPropertyVariables>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
