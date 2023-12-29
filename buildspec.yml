@@ -25,7 +25,7 @@ env:
     TEST_OIDC_CLIENT_ACCESS_TOKEN_URI: "cloudtrain-codebuild-common-test:test.oidc.client.accessTokenUri"
     TEST_OIDC_CLIENT_USER: "cloudtrain-codebuild-common-test:test.oidc.client.user"
     TEST_OIDC_CLIENT_PASSWORD: "cloudtrain-codebuild-common-test:test.oidc.client.password"
-    NIST_NVD_API_KEY: "cloudtrain-nvd-api-key:apiKey"
+    NIST_NVD_API_KEY: "cloudtrain-codebuild-nvd-api-key:apiKey"
 
 phases:
   install:
