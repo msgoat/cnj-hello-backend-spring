@@ -9,10 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
-## [8.1.0] - 2024-01-31
+## [8.2.0] - 2024-01-31
+### Changed
+- upgraded Spring Boot to version 3.2.2
+- consolidated common dependencies
+- upgraded common cloudtrain dependencies
+
+## [8.1.0] - 2024-01-09
 ### Changed
 - simplified POM
-- upgraded Spring Boot to version 3.2.2
 
 ## [8.0.0] - 2023-11-30
 ### Changed
