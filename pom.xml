@@ -17,7 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- runtime related properties -->
         <java.version>21</java.version>
-        <spring.boot.version>3.2.1</spring.boot.version>
+        <spring.boot.version>3.2.2</spring.boot.version>
         <start-class>group.msg.at.cloud.cloudtrain.SpringHelloApplication</start-class>
         <!-- common logging dependencies -->
         <logstash.logback.encoder.version>7.3</logstash.logback.encoder.version>
@@ -47,7 +47,6 @@
         <maven.clean.plugin.version>3.3.2</maven.clean.plugin.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <maven.dependency.plugin.version>3.6.1</maven.dependency.plugin.version>
-        <maven.dependency-check.plugin.version>9.0.4</maven.dependency-check.plugin.version>
         <maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
         <maven.docker.plugin.version>0.43.4</maven.docker.plugin.version>
         <maven.enforcer.plugin.version>3.4.1</maven.enforcer.plugin.version>
@@ -487,12 +486,14 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <phase>initialize</phase>
                     </execution>
                     <execution>
                         <id>prepare-agent-for-system-tests</id>
                         <goals>
                             <goal>prepare-agent-integration</goal>
                         </goals>
+                        <phase>pre-integration-test</phase>
                     </execution>
                     <execution>
                         <id>pull-jacoco-data-from-container</id>
@@ -502,13 +503,23 @@
                         <phase>integration-test</phase>
                     </execution>
                     <execution>
-                        <id>generate-report</id>
+                        <id>generate-report-unit-tests</id>
                         <goals>
                             <goal>report</goal>
                         </goals>
                         <phase>verify</phase>
                     </execution>
+                    <execution>
+                        <id>generate-report-system-tests</id>
+                        <goals>
+                            <goal>report-integration</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
                 </executions>
+                <configuration>
+                    <formats>XML</formats>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -541,17 +552,17 @@
                 <artifactId>helm-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>helm-lint</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>helm-package</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>helm-lint</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>lint</goal>
                         </goals>
                     </execution>
                     <execution>
@@ -594,7 +605,7 @@
                 </executions>
                 <configuration>
                     <nvdApiServerId>nist-nvd</nvdApiServerId>
-                    <format>HTML,JSON</format>
+                    <formats>HTML,JSON</formats>
                 </configuration>
             </plugin>
             <plugin>
@@ -619,7 +630,7 @@
         </resources>
     </build>
     <profiles>
-         <!-- profile pre-commit-stage representing pre-commit-stage of local build -->
+        <!-- profile pre-commit-stage representing pre-commit-stage of local build -->
         <!-- supposed to be run before each push to the central GIT repository -->
         <!-- builds application; runs unit tests on application; builds docker image; runs system tests on docker container -->
         <profile>
