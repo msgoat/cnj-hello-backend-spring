@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [8.2.0] - 2024-02-28
 ### Changed
-- upgraded Spring Boot to version 3.2.3
+- upgraded Spring Boot to version 3.2.4
 - consolidated common dependencies
 - upgraded common cloudtrain dependencies
 
